@@ -1,0 +1,2089 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package net.codejava;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Scanner;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+
+/**
+ *
+ * @author melih
+ */
+public class Kışla {
+
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/banka";
+        String username = "root";
+        String password = "Mysql_sifresi123";
+        Scanner sc = new Scanner(System.in);
+        int kullanıcı_id = 0;
+        int temsilci_no = 0;
+        int kullanıcı_id1 = 0;
+        while (true) {
+            System.out.println("\nMusteri girişi için 1 i tuşlayınız!!");
+            System.out.println("\nTemsilci girişi için 2 yi tuşlayınız!!");
+            System.out.println("\nYönetici girişi için 3 ü tuşlayınız!!");
+            System.out.println("\nÇıkış için 4 ü tuşlayınız!!\n");
+            int secim = sc.nextInt();
+            if (secim == 1) {
+                try {
+                    while (true) {
+                        Connection connection = DriverManager.getConnection(url, username, password);
+                        System.out.print("\nKullanıcı ID'nizi giriniz : ");
+                        kullanıcı_id1 = sc.nextInt();
+                        String sql = "SELECT COUNT(kullanıcı_id) FROM bilgi WHERE kullanıcı_id = ";
+                        PreparedStatement statement = connection.prepareStatement(sql);
+                        String ekleme = Integer.toString(kullanıcı_id1);
+                        sql = sql.concat(ekleme);
+                        ResultSet result = statement.executeQuery(sql);
+                        result.next();
+                        int varmi = result.getInt("COUNT(kullanıcı_id)");
+                        result.close();
+                        if (varmi == 1) {
+                            System.out.println("\n    HOŞGELDİNİZ!!");
+                            System.out.println("\nBilgi güncellemek için 1'i");
+                            System.out.println("Para çekmek için 2'yi");
+                            System.out.println("Para yatirmak için 3'ü");
+                            System.out.println("Para trasnfer etmek için 4'ü");
+                            System.out.println("Aylık kredi borcunu yatırmak için 5'i");
+                            System.out.println("Toplam kredi borcunu ödemek için 6'yı");
+                            System.out.println("Özet görüntülemek için 7'yi");
+                            System.out.print("Talepte bulunmak için 8'i     tuşlayınız : ");
+                            musteri musteri1 = new musteri(kullanıcı_id1);
+                            int secim5 = sc.nextInt();
+                            if (secim5 == 1) {
+                                musteri1.musteri_bilgi_guncelleme();
+                            } else if (secim5 == 2) {
+                                musteri1.para_cekme();
+                            } else if (secim5 == 3) {
+                                musteri1.para_yatirma();
+                            } else if (secim5 == 4) {
+                                musteri1.para_transferi();
+                            } else if (secim5 == 5) {
+                                musteri1.aylik_kredi_borcu();
+                            } else if (secim5 == 6) {
+                                musteri1.toplam_kredi_borcu();
+                            } else if (secim5 == 7) {
+                                musteri1.özet();
+                            } else if (secim5 == 8) {
+                                musteri1.müşteri_talepleri();
+                            } else {
+                                System.out.println("\nYanlış Giriş yaptın");
+                            }
+                            break;
+                        } else {
+                            System.out.print("\nGirilen Kullanıcı ID yanlış.Lütfen tekrar giriniz...");
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("\nOops, error");
+                    e.printStackTrace();
+                }
+            } else if (secim == 2) {
+                try {
+                    while (true) {
+                        Connection connection = DriverManager.getConnection(url, username, password);
+                        System.out.print("\nKullanıcı ID giriniz : ");
+                        kullanıcı_id = sc.nextInt();
+                        System.out.print("\nTemsilci NO giriniz : ");
+                        temsilci_no = sc.nextInt();
+                        String sql1 = "SELECT COUNT(kullanıcı_id) FROM bilgi WHERE kullanıcı_id = ? and temsilci_no = ?";
+                        PreparedStatement statement = connection.prepareStatement(sql1);
+                        statement.setInt(1, kullanıcı_id);
+                        statement.setInt(1, temsilci_no);
+                        String ekleme = Integer.toString(kullanıcı_id);
+                        String ekleme2 = Integer.toString(temsilci_no);
+                        String sql2 = "SELECT COUNT(kullanıcı_id) FROM bilgi WHERE kullanıcı_id = ";
+                        sql2 = sql2.concat(ekleme);
+                        String sql3 = " and temsilci_no = ";
+                        sql3 = sql3.concat(ekleme2);
+                        sql1 = sql2.concat(sql3);
+                        ResultSet result = statement.executeQuery(sql1);
+                        result.next();
+                        int varmi = result.getInt("COUNT(kullanıcı_id)");
+                        result.close();
+                        if (varmi == 1) {
+                            System.out.println("\n           HOŞGELDİNİZ :D");
+                            System.out.println("\nMusteri eklemek için 1'i");
+                            System.out.println("Musteri bilgisini güncellemek 2'yi");
+                            System.out.println("Hesap görüntülemek için 3'ü");
+                            System.out.println("İşlem görüntülemek için 4'ü");
+                            System.out.print("Talep onaylamak için 5'i    tuşlayınız : ");
+                            int secim5 = sc.nextInt();
+                            temsilci temsilci1 = new temsilci(kullanıcı_id, temsilci_no);
+                            if (secim5 == 1) {
+                                temsilci1.musteri_ekleme();
+                            } else if (secim5 == 2) {
+                                temsilci1.musteri_bilgi_guncelleme();
+                            } else if (secim5 == 3) {
+                                temsilci1.hesap_goruntule();
+                            } else if (secim5 == 4) {
+                                temsilci1.islem_goruntuleme();
+                            } else if (secim5 == 5) {
+                                temsilci1.talep_onayi();
+                            } else {
+                                System.out.println("\nYanlış Giriş yaptın");
+                            }
+                            break;
+                        } else {
+                            System.out.println("\nGirilen Kullanıcı ID veya Temsilci NO yanlış.Lütfen tekrar giriniz...");
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("\nOops, error");
+                    e.printStackTrace();
+                }
+            } else if (secim == 3) {
+                System.out.println("\n           HOŞGELDİNİZ MÜDÜRÜM :D");
+                System.out.println("\nKur güncellemek için 1'i");
+                System.out.println("Genel durumu görüntülemek için 2'yi");
+                System.out.println("Temsilci maaşını belirlemek için 3'ü");
+                System.out.println("Kredi faizlerini belirlemek için 4'ü");
+                System.out.println("Müşteri ekleme için 5'i");
+                System.out.println("İşlem görüntülemek için 6'yı");
+                System.out.print("Yasama yürütme yargı için 7'yi       tuşlayınız : ");
+                int secim5 = sc.nextInt();
+                yonetici yonetici1 = new yonetici();
+                if (secim5 == 1) {
+                    yonetici1.kur_güncelle();
+                } else if (secim5 == 2) {
+                    yonetici1.genel_durum_görüntüle();
+                } else if (secim5 == 3) {
+                    yonetici1.maas_belirle();
+                } else if (secim5 == 4) {
+                    yonetici1.faiz_belirle();
+                } else if (secim5 == 5) {
+                    yonetici1.musteri_ekle();
+                } else if (secim5 == 6) {
+                    yonetici1.islem_goruntule();
+                } else if (secim5 == 7) {
+                    yonetici1.yasama_yürütme();
+                } else {
+                    System.out.println("\nYanlış Giriş yaptın");
+                }
+                System.out.print("\nTemsilci maaş görüntülemek için 1 i yoksa 0 ı tuşlayınız : ");
+                int secim2 = sc.nextInt();
+                if (secim2 == 1) {
+                    System.out.println("\nTemsilci Maasşları : " + yonetici1.temsilci_maas);
+                }
+                break;
+            } else if (secim == 4) {
+                System.out.println("\nİyi Günler Dileriz!!");
+                break;
+            }
+        }
+    }
+}
+
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package net.codejava;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Scanner;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.sql.Date;
+
+/**
+ *
+ * @author melih
+ */
+public class musteri {
+
+    String url = "jdbc:mysql://localhost:3306/banka";
+    String username = "root";
+    String password = "Mysql_sifresi123";
+    Scanner sc = new Scanner(System.in);
+    Scanner sc1 = new Scanner(System.in);
+    InputStreamReader ir = new InputStreamReader(System.in);
+    BufferedReader br = new BufferedReader(ir);
+    int veri_girisi = 0;
+    int kullanıcı_id;
+
+    musteri(int kullanıcı_id) {
+        this.kullanıcı_id = kullanıcı_id;
+    }
+
+    void musteri_bilgi_guncelleme() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            System.out.print("\n\nAd Soyad güncellemek için 1'e basın yoksa 0'a basın : ");
+            int secim = sc.nextInt();
+            if (secim == 1) {
+                String sql = "UPDATE bilgi SET ad_soyad = ? where kullanıcı_id = ?";
+                PreparedStatement statement1 = connection.prepareStatement(sql);
+                System.out.print("\n\nYeni Ad Soyad giriniz :");
+                String isim = br.readLine();
+                statement1.setString(1, isim);
+                statement1.setInt(2, kullanıcı_id);
+                statement1.executeUpdate();
+                statement1.close();
+            }
+            System.out.print("\n\nTel NO güncellemek için 1'e basın yoksa 0'a basın : ");
+            secim = sc.nextInt();
+            if (secim == 1) {
+                String sql = "UPDATE bilgi SET tel_no = ? where kullanıcı_id = ?";
+                PreparedStatement statement1 = connection.prepareStatement(sql);
+                System.out.print("\n\nYeni Tel NO giriniz :");
+                int tel = sc1.nextInt();
+                statement1.setInt(1, tel);
+                statement1.setInt(2, kullanıcı_id);
+                statement1.executeUpdate();
+                statement1.close();
+            }
+            System.out.print("\n\nTc NO güncellemek için 1'e basın yoksa 0'a basın : ");
+            secim = sc.nextInt();
+            if (secim == 1) {
+                String sql = "UPDATE bilgi SET tc_no = ? where kullanıcı_id = ?";
+                PreparedStatement statement1 = connection.prepareStatement(sql);
+                System.out.print("\n\nYeni Tc NO giriniz :");
+                int tc = sc1.nextInt();
+                statement1.setInt(1, tc);
+                statement1.setInt(2, kullanıcı_id);
+                statement1.executeUpdate();
+                statement1.close();
+            }
+            System.out.print("\n\nAdres güncellemek için 1'e basın yoksa 0'a basın : ");
+            secim = sc.nextInt();
+            if (secim == 1) {
+                String sql = "UPDATE bilgi SET adres = ? where kullanıcı_id = ?";
+                PreparedStatement statement1 = connection.prepareStatement(sql);
+                System.out.print("\n\nYeni Adres giriniz :");
+                String adres = br.readLine();
+                statement1.setString(1, adres);
+                statement1.setInt(2, kullanıcı_id);
+                statement1.executeUpdate();
+                statement1.close();
+            }
+            System.out.print("\n\nE-Posta güncellemek için 1'e basın yoksa 0'a basın : ");
+            secim = sc.nextInt();
+            if (secim == 1) {
+                String sql = "UPDATE bilgi SET e_posta = ? where kullanıcı_id = ?";
+                PreparedStatement statement1 = connection.prepareStatement(sql);
+                System.out.print("\n\nYeni E-Posta giriniz :");
+                String mail = br.readLine();
+                statement1.setString(1, mail);
+                statement1.setInt(2, kullanıcı_id);
+                statement1.executeUpdate();
+                statement1.close();
+            }
+            connection.close();
+
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void para_cekme() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            while (true) {
+                String sql = "SELECT * FROM hesaplar WHERE kid = ";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                String ekleme = Integer.toString(kullanıcı_id);
+                sql = sql.concat(ekleme);
+                ResultSet result = statement.executeQuery(sql);
+                while (result.next()) {
+                    int hesap_no = result.getInt("hesap_no");
+                    int temsilci_no = result.getInt("temsilci_no");
+                    int para = result.getInt("bakiye");
+                    String kur = result.getString("kur");
+                    if (kur.startsWith("TL")) {
+                        System.out.print("\n" + hesap_no + " HESAP NO lu  " + kur + " hesabınızdan para çekmek istiyorsanız 1'e basın yoksa 0'a basın : ");
+                        veri_girisi = sc.nextInt();
+                        if (veri_girisi == 1) {
+                            System.out.print("\n" + kur + " hesabınızdan çekmek istediğiniz mikatarı giriniz : ");
+                            veri_girisi = sc.nextInt();
+                            if (para >= veri_girisi) {
+                                String str = "2015-03-31";
+                                Date date = Date.valueOf(str);
+                                sql = "UPDATE hesaplar SET bakiye = ? where hesap_no = ";
+                                ekleme = Integer.toString(hesap_no);
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, para - veri_girisi);
+                                statement.executeUpdate();
+                                statement.close();
+                                System.out.println("\nHesabınızdan" + veri_girisi + " TL başarılı bir şekilde çekilmiştir!!");
+                                sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,kaynak_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, hesap_no);
+                                statement.setInt(2, kullanıcı_id);
+                                statement.setString(3, "Para Çekme");
+                                statement.setInt(4, veri_girisi);
+                                statement.setInt(5, para);
+                                statement.setDate(6, date);
+                                statement.setInt(7, temsilci_no);
+                                statement.executeUpdate();
+                            } else {
+                                System.out.println("\nHesabınızda yeterli miktarda para yok!! FUKARAAAAAHAHAHAHAA");
+                            }
+                        }
+                    } else {
+                        System.out.print("\n" + hesap_no + " HESAP NO lu  " + kur + " hesabınızdan para çekmek istiyorsanız 1'e basın yoksa 0'a basın : ");
+                        veri_girisi = sc.nextInt();
+                        if (veri_girisi == 1) {
+                            System.out.println("\nDİKKAT!! Hesaplardan yalnızca TL şeklinde para çekilebilir.Bu sebeple istediğniz miktar,anlık kur ile çarpılarak çekilecektir!!");
+                            System.out.print("\n" + kur + " hesabınızdan çekmek istediğiniz mikatarı giriniz : ");
+                            veri_girisi = sc.nextInt();
+                            if (para >= veri_girisi) {
+                                String sql1 = "SELECT * FROM kurlar WHERE kur = '";
+                                sql1 = sql1.concat(kur + "'");
+                                PreparedStatement statement1 = connection.prepareStatement(sql1);
+                                ResultSet result1 = statement1.executeQuery(sql1);
+                                result1.next();
+                                float karsılıgı = result1.getFloat("karsılıgı");
+                                result1.close();
+                                String str = "2015-03-31";
+                                Date date = Date.valueOf(str);
+                                sql = "UPDATE hesaplar SET bakiye = ? where hesap_no = ";
+                                ekleme = Integer.toString(hesap_no);
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, para - veri_girisi);
+                                statement.executeUpdate();
+                                statement.close();
+                                System.out.println("\nHesabınızdan " + veri_girisi + "(" + (karsılıgı * veri_girisi) + " TL)$" + "başarılı şekilde çekilmiştir!!");
+                                sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,kaynak_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, hesap_no);
+                                statement.setInt(2, kullanıcı_id);
+                                statement.setString(3, "Para Çekme");
+                                statement.setInt(4, veri_girisi);
+                                statement.setInt(5, para);
+                                statement.setDate(6, date);
+                                statement.setInt(7, temsilci_no);
+                                statement.executeUpdate();
+                            } else {
+                                System.out.println("\nHesabınızda yeterli miktarda para yok!! FUKARAAAAAHAHAHAHAA");
+                            }
+                        }
+                    }
+                }
+                System.out.println("");
+                statement.close();
+                connection.close();
+                break;
+            }
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void para_yatirma() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            while (true) {
+                String sql = "SELECT * FROM hesaplar WHERE kid = ";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                String ekleme = Integer.toString(kullanıcı_id);
+                sql = sql.concat(ekleme);
+                ResultSet result = statement.executeQuery(sql);
+                while (result.next()) {
+                    int hesap_no = result.getInt("hesap_no");
+                    int temsilci_no = result.getInt("temsilci_no");
+                    String kur = result.getString("kur");
+                    if (kur != "TL") {
+                        System.out.print("\n" + hesap_no + " HESAP NO lu  " + kur + " hesabınıza para yatirmak istiyorsanız 1'e basın yoksa 0'a basın : ");
+                        veri_girisi = sc.nextInt();
+                        if (veri_girisi == 1) {
+                            System.out.print("\n" + kur + " hesabınıza yatirmak istediğiniz mikatarı giriniz : ");
+                            veri_girisi = sc.nextInt();
+                            int para = result.getInt("bakiye");
+                            String str = "2015-03-31";
+                            Date date = Date.valueOf(str);
+                            sql = "UPDATE hesaplar SET bakiye = ? where hesap_no = ";
+                            ekleme = Integer.toString(hesap_no);
+                            sql = sql.concat(ekleme);
+                            statement = connection.prepareStatement(sql);
+                            statement.setInt(1, para + veri_girisi);
+                            statement.executeUpdate();
+                            statement.close();
+                            System.out.println("\nBAŞARILI");
+                            sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,hedef_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                            statement = connection.prepareStatement(sql);
+                            statement.setInt(1, kullanıcı_id);
+                            statement.setInt(2, hesap_no);
+                            statement.setString(3, "Para Yatirma");
+                            statement.setInt(4, veri_girisi);
+                            statement.setInt(5, para);
+                            statement.setDate(6, date);
+                            statement.setInt(7, temsilci_no);
+                            statement.executeUpdate();
+                        }
+                    } else {
+                        System.out.print("\n" + hesap_no + " HESAP NO lu  " + kur + " hesabınızdan para yatirmak istiyorsanız 1'e basın yoksa 0'a basın : ");
+                        veri_girisi = sc.nextInt();
+                        if (veri_girisi == 1) {
+                            System.out.print("\n" + kur + " hesabınıza yatirmak istediğiniz mikatarı giriniz : ");
+                            veri_girisi = sc.nextInt();
+                            int para = result.getInt("bakiye");
+                            String str = "2015-03-31";
+                            Date date = Date.valueOf(str);
+                            sql = "UPDATE hesaplar SET bakiye = ? where hesap_no = ";
+                            ekleme = Integer.toString(hesap_no);
+                            sql = sql.concat(ekleme);
+                            statement = connection.prepareStatement(sql);
+                            statement.setInt(1, para + veri_girisi);
+                            statement.executeUpdate();
+                            statement.close();
+                            System.out.println("\nBAŞARILI");
+                            sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,hedef_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                            statement = connection.prepareStatement(sql);
+                            statement.setInt(1, kullanıcı_id);
+                            statement.setInt(2, hesap_no);
+                            statement.setString(3, "Para Yatirma");
+                            statement.setInt(4, veri_girisi);
+                            statement.setInt(5, para);
+                            statement.setDate(6, date);
+                            statement.setInt(7, temsilci_no);
+                            statement.executeUpdate();
+                        }
+                    }
+                }
+                statement.close();
+                connection.close();
+                break;
+            }
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void para_transferi() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            while (true) {
+                String sql = "SELECT COUNT(hesap_no) FROM hesaplar WHERE hesap_no = ";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                System.out.print("\nPara transfer etmek istediğiniz hesap numarasını giriniz : ");
+                int hedef = sc.nextInt();
+                String ekleme = Integer.toString(hedef);
+                sql = sql.concat(ekleme);
+                ResultSet result = statement.executeQuery(sql);
+                result.next();
+                int varmi = result.getInt("COUNT(hesap_no)");
+                String sql1 = "SELECT * FROM hesaplar WHERE hesap_no = ";
+                PreparedStatement statement1 = connection.prepareStatement(sql1);
+                String ekleme1 = Integer.toString(hedef);
+                sql1 = sql1.concat(ekleme1);
+                ResultSet result1 = statement1.executeQuery(sql1);
+                result1.next();
+                String kur1 = result1.getString("kur");
+                if (varmi == 1) {
+                    sql = "SELECT * FROM hesaplar WHERE hesap_no = ";
+                    statement = connection.prepareStatement(sql);
+                    sql = sql.concat(ekleme);
+                    result = statement.executeQuery(sql);
+                    result.next();
+                    int bakiye = result.getInt("bakiye");
+                    sql = "SELECT * FROM hesaplar WHERE kid = ";
+                    statement = connection.prepareStatement(sql);
+                    ekleme = Integer.toString(kullanıcı_id);
+                    sql = sql.concat(ekleme);
+                    result = statement.executeQuery(sql);
+                    while (result.next()) {
+                        int hesap_no = result.getInt("hesap_no");
+                        int temsilci_no = result.getInt("temsilci_no");
+                        String kur = result.getString("kur");
+                        System.out.print("\n" + hesap_no + " HESAP NO lu  " + kur + " hesabınızdan " + hedef + " HESAP NO lu hesaba para transfer etmek istiyorsanız 1'e basın yoksa 0'a basın : ");
+                        veri_girisi = sc.nextInt();
+                        if (veri_girisi == 1) {
+                            System.out.print("\n" + kur + " hesabınızdan transfer etmek istediğiniz para miktarini giriniz : ");
+                            veri_girisi = sc.nextInt();
+                            if (kur == kur1) {
+                                int para = result.getInt("bakiye");
+                                String str = "2015-03-31";
+                                Date date = Date.valueOf(str);
+                                sql = "UPDATE hesaplar SET bakiye = ? where hesap_no = ";
+                                ekleme = Integer.toString(hesap_no);
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, para - veri_girisi);
+                                statement.executeUpdate();
+                                statement.close();
+                                sql = "UPDATE hesaplar SET bakiye = ? where hesap_no = ";
+                                ekleme = Integer.toString(hedef);
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, bakiye + veri_girisi);
+                                statement.executeUpdate();
+                                statement.close();
+                                System.out.println("\n" + hesap_no + "hesap no lu hesabınızdan " + hedef + "hesap no lu hesaba " + veri_girisi + " " + kur + "başarıyla transfer edilmiştir!!");
+                                sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,kaynak_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, hesap_no);
+                                statement.setInt(2, hedef);
+                                statement.setString(3, "Para Gönderme");
+                                statement.setInt(4, veri_girisi);
+                                statement.setInt(5, para);
+                                statement.setDate(6, date);
+                                statement.setInt(7, temsilci_no);
+                                statement.executeUpdate();
+                            } else if (kur.startsWith("TL") || kur1.startsWith("TL")) {
+                                System.out.println("\nDİKKAT!! Farklı kura sahip hesaplara para transfer edilirken gönderilmek istenen miktar kur ile çarpılarak transfer edilir!!");
+                                String sql2 = "SELECT * FROM kurlar WHERE kur = '";
+                                sql2 = sql2.concat(kur + "'");
+                                PreparedStatement statement2 = connection.prepareStatement(sql2);
+                                ResultSet result2 = statement2.executeQuery(sql2);
+                                result2.next();
+                                float karsılıgı = result2.getFloat("karsılıgı");
+                                result2.close();
+                                int para = result.getInt("bakiye");
+                                String str = "2015-03-31";
+                                Date date = Date.valueOf(str);
+                                sql = "UPDATE hesaplar SET bakiye = ? where hesap_no = ";
+                                ekleme = Integer.toString(hesap_no);
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, para - veri_girisi);
+                                statement.executeUpdate();
+                                statement.close();
+                                sql = "UPDATE hesaplar SET bakiye = ? where hesap_no = ";
+                                ekleme = Integer.toString(hedef);
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, bakiye + (int) (karsılıgı * veri_girisi));
+                                statement.executeUpdate();
+                                statement.close();
+                                System.out.println("\n" + hesap_no + " hesap no lu hesabınızdan " + hedef + " hesap no lu hesaba " + veri_girisi + " " + kur + " (" + (int) (karsılıgı * veri_girisi) + ")" + "TL başarıyla transfer edilmiştir!!");
+                                sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,kaynak_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, hesap_no);
+                                statement.setInt(2, hedef);
+                                statement.setString(3, "Para Gönderme");
+                                statement.setInt(4, (int) (karsılıgı * veri_girisi));
+                                statement.setInt(5, para);
+                                statement.setDate(6, date);
+                                statement.setInt(7, temsilci_no);
+                                statement.executeUpdate();
+                            } else if (kur1.startsWith("TL")) {
+                                System.out.println("\nDİKKAT!! Farklı kura sahip hesaplara para transfer edilirken gönderilmek istenen miktar kur ile çarpılarak transfer edilir!!");
+                                String sql2 = "SELECT * FROM kurlar WHERE kur = '";
+                                sql2 = sql2.concat(kur + "'");
+                                PreparedStatement statement2 = connection.prepareStatement(sql2);
+                                ResultSet result2 = statement2.executeQuery(sql2);
+                                result2.next();
+                                float karsılıgı = result2.getFloat("karsılıgı");
+                                result2.close();
+                                int para = result.getInt("bakiye");
+                                String str = "2015-03-31";
+                                Date date = Date.valueOf(str);
+                                sql = "UPDATE hesaplar SET bakiye = ? where hesap_no = ";
+                                ekleme = Integer.toString(hesap_no);
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, para - veri_girisi);
+                                statement.executeUpdate();
+                                statement.close();
+                                sql = "UPDATE hesaplar SET bakiye = ? where hesap_no = ";
+                                ekleme = Integer.toString(hedef);
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, bakiye + (int) ((1 / karsılıgı) * veri_girisi));
+                                statement.executeUpdate();
+                                statement.close();
+                                System.out.println("\n" + hesap_no + " hesap no lu hesabınızdan " + hedef + " hesap no lu hesaba " + veri_girisi + " " + kur + " (" + (int) ((1 / karsılıgı) * veri_girisi) + ")" + "TL başarıyla transfer edilmiştir!!");
+                                sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,kaynak_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                                statement = connection.prepareStatement(sql);
+                                statement.setInt(1, hesap_no);
+                                statement.setInt(2, hedef);
+                                statement.setString(3, "Para Gönderme");
+                                statement.setInt(4, (int) (karsılıgı * veri_girisi));
+                                statement.setInt(5, para);
+                                statement.setDate(6, date);
+                                statement.setInt(7, temsilci_no);
+                                statement.executeUpdate();
+                            } else {
+                                System.out.println("Para transferlerinde iki hesaptan en az biri TL hesabı olmalıdır.Çıkışa yönlendiriliyorsunuz");
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                } else {
+                    System.out.println("\nGirilen hesap no yanliş.Lütfen tekrar giriniz...");
+                }
+                statement.close();
+            }
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void aylik_kredi_borcu() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            String sql = "SELECT COUNT(*) FROM hesaplar WHERE kid = ";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            String ekleme = Integer.toString(kullanıcı_id);
+            sql = sql.concat(ekleme);
+            String sql1 = " and kur = 'TL'";
+            sql = sql.concat(sql1);
+            ResultSet result = statement.executeQuery(sql);
+            result.next();
+            int varmi = result.getInt("COUNT(*)");
+            if (varmi == 1) {
+                sql = "SELECT * FROM hesaplar WHERE kid = ";
+                statement = connection.prepareStatement(sql);
+                ekleme = Integer.toString(kullanıcı_id);
+                sql = sql.concat(ekleme);
+                sql1 = " and kur = 'TL'";
+                sql = sql.concat(sql1);
+                result = statement.executeQuery(sql);
+                result.next();
+                int hesap_no = result.getInt("hesap_no");
+                int temsilci_no = result.getInt("temsilci_no");
+                int aylık_borc = result.getInt("aylık_borc");
+                int toplam_borc = result.getInt("toplam_borc");
+                String kur = result.getString("kur");
+                int para = result.getInt("bakiye");
+                float gecikme_faizi = result.getFloat("gecikme_faizi");
+                int gecikme_borcu = result.getInt("gecikme_borcu");
+                float faiz = result.getFloat("faiz");
+                int fazlalık = (int) ((toplam_borc - aylık_borc) * faiz);
+                if (toplam_borc == 0) {
+                    System.out.println("Borcunuz bulunmamaktadır :D");
+                } else if (para >= aylık_borc + gecikme_borcu) {
+                    String str = "2015-03-31";
+                    Date date = Date.valueOf(str);
+                    sql = "UPDATE hesaplar SET bakiye = ?,toplam_borc = ?,aylık_borc = ? where hesap_no = ";
+                    ekleme = Integer.toString(hesap_no);
+                    sql = sql.concat(ekleme);
+                    statement = connection.prepareStatement(sql);
+                    statement.setInt(1, para - aylık_borc);
+                    statement.setInt(2, toplam_borc - aylık_borc);
+                    if (toplam_borc - aylık_borc == 0) {
+                        statement.setInt(3, 0);
+                        System.out.println("Borcuzun bitmistir :D");
+                    } else {
+                        statement.setInt(3, aylık_borc);
+                    }
+                    System.out.println("Ödenen Aylık Borç miktarı : " + aylık_borc + gecikme_borcu);
+                    System.out.println("Ödenen Faiz miktarı : " + fazlalık + gecikme_borcu);
+                    statement.executeUpdate();
+                    statement.close();
+                    System.out.println("\nBAŞARILI");
+                    sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,kaynak_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                    statement = connection.prepareStatement(sql);
+                    statement.setInt(1, hesap_no);
+                    statement.setInt(2, 99999);
+                    statement.setString(3, "Borç Ödeme");
+                    statement.setInt(4, aylık_borc);
+                    statement.setInt(5, para);
+                    statement.setDate(6, date);
+                    statement.setInt(7, temsilci_no);
+                    statement.executeUpdate();
+                } else {
+                    String str = "2015-03-31";
+                    Date date = Date.valueOf(str);
+                    sql = "UPDATE hesaplar SET bakiye = ?,toplam_borc = ?,aylık_borc = ?,gecikme_borcu = ? where hesap_no = ";
+                    ekleme = Integer.toString(hesap_no);
+                    sql = sql.concat(ekleme);
+                    statement = connection.prepareStatement(sql);
+                    if (para == 0) {
+                        statement.setInt(1, 0);
+                        statement.setInt(2, toplam_borc - aylık_borc + aylık_borc + (int) ((aylık_borc) * gecikme_faizi));
+                        statement.setInt(3, aylık_borc);
+                        statement.setInt(4, gecikme_borcu + (int) ((aylık_borc) * gecikme_faizi));
+                        statement.executeUpdate();
+                        statement.close();
+                    } else {
+                        statement.setInt(1, 0);
+                        statement.setInt(2, toplam_borc - aylık_borc + aylık_borc + (int) ((aylık_borc - para) * gecikme_faizi) - para);
+                        if (toplam_borc - aylık_borc == 0) {
+                            statement.setInt(3, aylık_borc - para);
+                        } else {
+                            statement.setInt(3, aylık_borc);
+                        }
+                        statement.setInt(4, gecikme_borcu + (int) ((aylık_borc - para) * gecikme_faizi));
+                        statement.executeUpdate();
+                        statement.close();
+                        sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,kaynak_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                        statement = connection.prepareStatement(sql);
+                        statement.setInt(1, hesap_no);
+                        statement.setInt(2, 99999);
+                        statement.setString(3, "Borç Ödeme");
+                        statement.setInt(4, para);
+                        statement.setInt(5, para);
+                        statement.setDate(6, date);
+                        statement.setInt(7, temsilci_no);
+                        System.out.println("Hesabınızda yeterli miktarda para yoktur!!");
+                        System.out.println("\nÖdenen miktar : " + para);
+                        statement.executeUpdate();
+                    }
+                }
+            }
+            System.out.println("");
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void toplam_kredi_borcu() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            String sql = "SELECT COUNT(*) FROM hesaplar WHERE kid = ";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            String ekleme = Integer.toString(kullanıcı_id);
+            sql = sql.concat(ekleme);
+            String sql1 = " and kur = 'TL'";
+            sql = sql.concat(sql1);
+            ResultSet result = statement.executeQuery(sql);
+            result.next();
+            int varmi = result.getInt("COUNT(*)");
+            if (varmi == 1) {
+                sql = "SELECT * FROM hesaplar WHERE kid = ";
+                statement = connection.prepareStatement(sql);
+                ekleme = Integer.toString(kullanıcı_id);
+                sql = sql.concat(ekleme);
+                sql1 = " and kur = 'TL'";
+                sql = sql.concat(sql1);
+                result = statement.executeQuery(sql);
+                result.next();
+                int hesap_no = result.getInt("hesap_no");
+                int temsilci_no = result.getInt("temsilci_no");
+                int aylık_borc = result.getInt("aylık_borc");
+                int toplam_borc = result.getInt("toplam_borc");
+                String kur = result.getString("kur");
+                int para = result.getInt("bakiye");
+                float faiz = result.getFloat("faiz");
+                int gecikme_borcu = result.getInt("gecikme_borcu");
+                if (toplam_borc == 0) {
+                    System.out.println("Borcunuz bulunmamaktadır :D");
+                } else if (para >= toplam_borc + gecikme_borcu) {
+                    String str = "2016-03-31";
+                    Date date = Date.valueOf(str);
+                    sql = "UPDATE hesaplar SET bakiye = ?,toplam_borc = ?,aylık_borc = ?,gecikme_borcu = ? where hesap_no = ";
+                    ekleme = Integer.toString(hesap_no);
+                    sql = sql.concat(ekleme);
+                    statement = connection.prepareStatement(sql);
+                    int fazlalık = (int) ((toplam_borc - aylık_borc) * faiz);
+                    statement.setInt(1, (para - toplam_borc + fazlalık - gecikme_borcu));
+                    statement.setInt(2, 0);
+                    statement.setInt(3, 0);
+                    statement.setInt(4, 0);
+                    System.out.println("Ödenen Toplam Borç : " + toplam_borc + gecikme_borcu);
+                    System.out.println("Ödenen Toplam Faiz : " + fazlalık + gecikme_borcu);
+                    statement.executeUpdate();
+                    statement.close();
+                    System.out.println("\nBAŞARILI");
+                    sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,kaynak_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                    statement = connection.prepareStatement(sql);
+                    statement.setInt(1, hesap_no);
+                    statement.setInt(2, 99999);
+                    statement.setString(3, "Borç Ödeme");
+                    statement.setInt(4, toplam_borc - fazlalık);
+                    statement.setInt(5, para);
+                    statement.setDate(6, date);
+                    statement.setInt(7, temsilci_no);
+                    statement.executeUpdate();
+                } else {
+                    System.out.println("\nHesabınızda yeterli miktarda para yok!! FUKARAAAAAHAHAHAHAA");
+                }
+            }
+            System.out.println("");
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void özet() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            while (true) {
+                String sql = "SELECT COUNT(islem_no) FROM özetler,hesaplar WHERE kid = ";
+                String ekleme = Integer.toString(kullanıcı_id);
+                sql = sql.concat(ekleme);
+                String sql1 = " and (kaynak = hesap_no or hedef = hesap_no)";
+                sql = sql.concat(sql1);
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet result = statement.executeQuery(sql);
+                result.next();
+                int varmi = result.getInt("COUNT(islem_no)");
+                result.close();
+                if (varmi > 0) {
+                    sql = "SELECT * FROM özetler,hesaplar WHERE kid = ";
+                    sql = sql.concat(ekleme);
+                    sql1 = " and (kaynak = hesap_no or hedef = hesap_no)";
+                    sql = sql.concat(sql1);
+                    statement = connection.prepareStatement(sql);
+                    result = statement.executeQuery(sql);
+                    while (result.next()) {
+                        int islem_no = result.getInt("islem_no");
+                        String islem = result.getString("islem");
+                        int hedef = result.getInt("hedef");
+                        int tutar = result.getInt("tutar");
+                        Date tarih = result.getDate("tarih");
+                        System.out.println("\nİŞLEM NO : " + islem_no);
+                        System.out.println("İŞLEM : " + islem);
+                        System.out.println("HEDEF : " + hedef);
+                        System.out.println("TUTAR : " + tutar);
+                        System.out.println("TARİH : " + tarih);
+                        System.out.println("");
+                    }
+                    statement.close();
+                    break;
+                } else {
+                    System.out.println("\nBu kullanıcıya erişemezsiniz?!Lütfen tekrar giriniz...");
+                }
+            }
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void müşteri_talepleri() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            int id = 0;
+            while (true) {
+                String sql = "INSERT INTO talepler (talep_türü, kullanıcı_id, temsilci_no, hesap_no, onay_durumu) VALUES(?,?,?,?,?)";
+                String sql1 = "INSERT INTO talepler (talep_türü, kullanıcı_id, temsilci_no, onay_durumu) VALUES(?,?,?,?)";
+                String sql2 = "SELECT temsilci_no FROM hesaplar WHERE kid = ";
+                String sql3 = "INSERT INTO talepler (talep_türü, kullanıcı_id, temsilci_no, hesap_no, miktar, vade, onay_durumu) VALUES(?,?,?,?,?,?,?)";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                PreparedStatement statement1 = connection.prepareStatement(sql1);
+                PreparedStatement statement2 = connection.prepareStatement(sql2);
+                PreparedStatement statement3 = connection.prepareStatement(sql3);
+                String ekleme = Integer.toString(kullanıcı_id);
+                sql2 = sql2.concat(ekleme);
+                System.out.print("\nHesap açmak istiyorsanız 1'e basın yoksa 0'a basın : ");
+                veri_girisi = sc.nextInt();
+                if (veri_girisi != 0) {
+                    ResultSet result = statement1.executeQuery(sql2);
+                    int temsilci_no = 0;
+                    while (result.next()) {
+                        temsilci_no = result.getInt("temsilci_no");
+                        break;
+                    }
+                    statement1.setString(1, "Hesap Açma");
+                    statement1.setInt(2, this.kullanıcı_id);
+                    statement1.setInt(3, temsilci_no);
+                    statement1.setString(4, "ONAY BEKLİYOR");
+                    statement1.executeUpdate();
+                }
+                System.out.print("\nHesap silmek istiyorsanız 1'e basın yoksa 0'a basın : ");
+                veri_girisi = sc.nextInt();
+                if (veri_girisi != 0) {
+                    ResultSet result = statement.executeQuery(sql2);
+                    int temsilci_no = 0;
+                    while (result.next()) {
+                        temsilci_no = result.getInt("temsilci_no");
+                        break;
+                    }
+                    System.out.print("\nSilmek istediğiniz hesap no : ");
+                    int hesap_no = sc1.nextInt();
+                    statement.setString(1, "Hesap Silme");
+                    statement.setInt(2, this.kullanıcı_id);
+                    statement.setInt(3, temsilci_no);
+                    statement.setInt(4, hesap_no);
+                    statement1.setString(5, "ONAY BEKLİYOR");
+                    statement.executeUpdate();
+                }
+                System.out.print("\nKredi talep etmek istiyorsanız 1'e basın yoksa 0'a basın : ");
+                veri_girisi = sc.nextInt();
+                if (veri_girisi != 0) {
+                    ResultSet result = statement3.executeQuery(sql2);
+                    int temsilci_no = 0;
+                    while (result.next()) {
+                        temsilci_no = result.getInt("temsilci_no");
+                        break;
+                    }
+                    int hesap_no = 0;
+                    while (true) {
+                        System.out.print("\nKredi çekmek istediğiniz hesap no : ");
+                        hesap_no = sc1.nextInt();
+                        sql = "SELECT COUNT(hesap_no) FROM hesaplar where hesap_no = ";
+                        ekleme = Integer.toString(hesap_no);
+                        sql = sql.concat(ekleme);
+                        statement = connection.prepareStatement(sql);
+                        result = statement.executeQuery(sql);
+                        result.next();
+                        int varmi = result.getInt("COUNT(hesap_no)");
+                        result.close();
+                        if (varmi != 1) {
+                            System.out.println("\nGirilen hesap no yanlış.Lütfen tekrar giriniz...");
+                        } else {
+                            break;
+                        }
+                    }
+                    System.out.print("\nÇekmek istediğiniz kredi miktarı : ");
+                    int miktar = sc1.nextInt();
+                    System.out.print("\nKaç taksit olsun istersiniz? : ");
+                    int vade = sc1.nextInt();
+                    statement3.setString(1, "Kredi Talebi");
+                    statement3.setInt(2, this.kullanıcı_id);
+                    statement3.setInt(3, temsilci_no);
+                    statement3.setInt(4, hesap_no);
+                    statement3.setInt(5, miktar);
+                    statement3.setInt(6, vade);
+                    statement3.setString(7, "ONAY BEKLİYOR");
+                    statement3.executeUpdate();
+                }
+                statement.close();
+                statement1.close();
+                statement3.close();
+                connection.close();
+                break;
+            }
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+}
+
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package net.codejava;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Scanner;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+
+/**
+ *
+ * @author melih
+ */
+public class temsilci {
+
+    String url = "jdbc:mysql://localhost:3306/banka";
+    String username = "root";
+    String password = "Mysql_sifresi123";
+    Scanner sc = new Scanner(System.in);
+    Scanner sc1 = new Scanner(System.in);
+    InputStreamReader ir = new InputStreamReader(System.in);
+    BufferedReader br = new BufferedReader(ir);
+    int veri_girisi = 0;
+    int temsilci_no;
+
+    temsilci(int kullanıcı_id, int temsilci_no) {
+        this.temsilci_no = temsilci_no;
+    }
+
+    void musteri_ekleme() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            String sql = "INSERT INTO bilgi (ad_soyad,tel_no,tc_no,adres,e_posta,pozisyon,kullanıcı_id) VALUES(?,?,?,?,?,?,?)";
+            String sql1 = "INSERT INTO hesaplar (kid,hesap_no,kur,bakiye,toplam_borc,aylık_borc,faiz,temsilci_no) VALUES(?,?,?,?,?,?,?,?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement2 = connection.prepareStatement(sql1);
+            System.out.print("\nİsim Soyisim : ");
+            String isim = br.readLine();
+            System.out.print("\nTel NO : ");
+            int tel = sc1.nextInt();
+            System.out.print("\nTC NO : ");
+            int tc = sc1.nextInt();
+            System.out.print("\nAdres: ");
+            String adres = br.readLine();
+            System.out.print("\nE-Posta : ");
+            String mail = br.readLine();
+            System.out.print("\nPozisyon : ");
+            String poz = br.readLine();
+            System.out.print("\nKullanıcı ID : ");
+            int id = sc1.nextInt();
+            System.out.println("Lütfen hesap bilgilerini giriniz!");
+            System.out.print("\nHesap NO : ");
+            int hesap = sc1.nextInt();
+            statement.setString(1, isim);
+            statement.setInt(2, tel);
+            statement.setInt(3, tc);
+            statement.setString(4, adres);
+            statement.setString(5, mail);
+            statement.setString(6, poz);
+            statement.setInt(7, id);
+            statement2.setInt(1, id);
+            statement2.setInt(2, hesap);
+            statement2.setString(3, "TL");
+            statement2.setInt(4, 0);
+            statement2.setInt(5, 0);
+            statement2.setInt(6, 0);
+            statement2.setFloat(7, 0);
+            statement2.setInt(8, temsilci_no);
+            int rows = statement.executeUpdate();
+            int rows2 = statement2.executeUpdate();
+            veri_girisi = 0;
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("Oops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void musteri_bilgi_guncelleme() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            int id = 0;
+            while (true) {
+                String sql = "SELECT COUNT(kullanıcı_id) FROM bilgi WHERE kullanıcı_id = ?";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                System.out.print("\nBilgilerini güncellemek istediğiniz kullanıcın id'sini giriniz : ");
+                id = sc.nextInt();
+                statement.setInt(1, id);
+                String ekleme = Integer.toString(id);
+                String sql1 = "SELECT COUNT(kullanıcı_id) FROM bilgi WHERE kullanıcı_id = ";
+                sql = sql1.concat(ekleme);
+                ResultSet result = statement.executeQuery(sql);
+                result.next();
+                int varmi = result.getInt("COUNT(kullanıcı_id)");
+                result.close();
+                if (varmi == 1) {
+                    sql = "SELECT COUNT(kid) FROM hesaplar WHERE kid = ";
+                    sql = sql.concat(ekleme);
+                    sql1 = " and temsilci_no = ";
+                    ekleme = Integer.toString(temsilci_no);
+                    sql1 = sql1.concat(ekleme);
+                    sql = sql.concat(sql1);
+                    result = statement.executeQuery(sql);
+                    result.next();
+                    varmi = result.getInt("COUNT(kid)");
+                    result.close();
+                    if (varmi > 0) {
+                        System.out.print("\n\nAd Soyad güncellemek için 1'e basın yoksa 0'a basın : ");
+                        int secim = sc.nextInt();
+                        if (secim == 1) {
+                            sql = "UPDATE bilgi SET ad_soyad = ? where kullanıcı_id = ?";
+                            PreparedStatement statement1 = connection.prepareStatement(sql);
+                            System.out.print("\n\nYeni Ad Soyad giriniz :");
+                            String isim = br.readLine();
+                            statement1.setString(1, isim);
+                            statement1.setInt(2, id);
+                            statement1.executeUpdate();
+                            statement1.close();
+                        }
+                        System.out.print("\n\nTel NO güncellemek için 1'e basın yoksa 0'a basın : ");
+                        secim = sc.nextInt();
+                        if (secim == 1) {
+                            sql = "UPDATE bilgi SET tel_no = ? where kullanıcı_id = ?";
+                            PreparedStatement statement1 = connection.prepareStatement(sql);
+                            System.out.print("\n\nYeni Tel NO giriniz :");
+                            int tel = sc1.nextInt();
+                            statement1.setInt(1, tel);
+                            statement1.setInt(2, id);
+                            statement1.executeUpdate();
+                            statement1.close();
+                        }
+                        System.out.print("\n\nTc NO güncellemek için 1'e basın yoksa 0'a basın : ");
+                        secim = sc.nextInt();
+                        if (secim == 1) {
+                            sql = "UPDATE bilgi SET tc_no = ? where kullanıcı_id = ?";
+                            PreparedStatement statement1 = connection.prepareStatement(sql);
+                            System.out.print("\n\nYeni Tc NO giriniz :");
+                            int tc = sc1.nextInt();
+                            statement1.setInt(1, tc);
+                            statement1.setInt(2, id);
+                            statement1.executeUpdate();
+                            statement1.close();
+                        }
+                        System.out.print("\n\nAdres güncellemek için 1'e basın yoksa 0'a basın : ");
+                        secim = sc.nextInt();
+                        if (secim == 1) {
+                            sql = "UPDATE bilgi SET adres = ? where kullanıcı_id = ?";
+                            PreparedStatement statement1 = connection.prepareStatement(sql);
+                            System.out.print("\n\nYeni Adres giriniz :");
+                            String adres = br.readLine();
+                            statement1.setString(1, adres);
+                            statement1.setInt(2, id);
+                            statement1.executeUpdate();
+                            statement1.close();
+                        }
+                        System.out.print("\n\nE-Posta güncellemek için 1'e basın yoksa 0'a basın : ");
+                        secim = sc.nextInt();
+                        if (secim == 1) {
+                            sql = "UPDATE bilgi SET e_posta = ? where kullanıcı_id = ?";
+                            PreparedStatement statement1 = connection.prepareStatement(sql);
+                            System.out.print("\n\nYeni E-Posta giriniz :");
+                            String mail = br.readLine();
+                            statement1.setString(1, mail);
+                            statement1.setInt(2, id);
+                            statement1.executeUpdate();
+                            statement1.close();
+                        }
+                        break;
+                    } else {
+                        System.out.println("\nBu kullanıcıya erişemezsiniz?!Lütfen tekrar giriniz...");
+                    }
+                } else {
+                    System.out.println("\nGirilen Kullanıcı id yanlış.Lütfen tekrar giriniz...");
+                }
+            }
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+
+    }
+
+    void hesap_goruntule() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            while (true) {
+                String sql = "SELECT COUNT(kid) FROM hesaplar WHERE kid = ?";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                System.out.print("\nBilgilerini görüntülemek istediğiniz kullanıcın id'sini giriniz : ");
+                int id = sc.nextInt();
+                statement.setInt(1, id);
+                String ekleme = Integer.toString(id);
+                String sql1 = "SELECT COUNT(kid) FROM hesaplar WHERE kid = ";
+                sql = sql1.concat(ekleme);
+                ResultSet result = statement.executeQuery(sql);
+                result.next();
+                int varmi = result.getInt("COUNT(kid)");
+                result.close();
+                if (varmi > 0) {
+                    sql1 = " and temsilci_no = ";
+                    ekleme = Integer.toString(temsilci_no);
+                    sql1 = sql1.concat(ekleme);
+                    sql = sql.concat(sql1);
+                    result = statement.executeQuery(sql);
+                    result.next();
+                    varmi = result.getInt("COUNT(kid)");
+                    result.close();
+                    if (varmi > 0) {
+                        sql1 = "SELECT * FROM hesaplar WHERE kid = ";
+                        ekleme = Integer.toString(id);
+                        sql1 = sql1.concat(ekleme);
+                        result = statement.executeQuery(sql1);
+                        int count = 1;
+                        while (result.next()) {
+                            int hesap_no = result.getInt("hesap_no");
+                            int bakiye = result.getInt("bakiye");
+                            int toplam_borc = result.getInt("toplam_borc");
+                            int aylık_borc = result.getInt("aylık_borc");
+                            String kur = result.getString("kur");
+                            System.out.println("\n   HESAP " + count);
+                            System.out.println("\nHESAP NO : " + hesap_no);
+                            System.out.println("KUR : " + kur);
+                            System.out.println("BAKİYE : " + bakiye);
+                            System.out.println("TOPLAM BORÇ  : " + toplam_borc);
+                            System.out.println("AYLIK BORÇ : " + aylık_borc);
+                            System.out.println("");
+                            count++;
+                        }
+                        statement.close();
+                        break;
+                    } else {
+                        System.out.println("\nBu kullanıcıya erişemezsiniz?!Lütfen tekrar giriniz...");
+                    }
+
+                } else {
+                    System.out.println("\nGirilen Kullanıcı id yanlış.Lütfen tekrar giriniz...");
+                }
+            }
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void islem_goruntuleme() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            while (true) {
+                String sql = "SELECT COUNT(kaynak) FROM özetler WHERE kaynak = ?";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                System.out.print("Bilgilerini görüntülemek istediğiniz kullanıcın hesap no'sunu giriniz : ");
+                int id = sc.nextInt();
+                statement.setInt(1, id);
+                String ekleme = Integer.toString(id);
+                String sql1 = "SELECT COUNT(kaynak) FROM özetler WHERE kaynak = ";
+                sql = sql1.concat(ekleme);
+                ResultSet result = statement.executeQuery(sql);
+                result.next();
+                int varmi = result.getInt("COUNT(kaynak)");
+                result.close();
+                if (varmi > 0) {
+                    sql1 = " and temsilci_no = ";
+                    ekleme = Integer.toString(temsilci_no);
+                    sql1 = sql1.concat(ekleme);
+                    sql = sql.concat(sql1);
+                    result = statement.executeQuery(sql);
+                    result.next();
+                    varmi = result.getInt("COUNT(kaynak)");
+                    result.close();
+                    if (varmi > 0) {
+                        sql1 = "SELECT * FROM özetler WHERE kaynak = ";
+                        ekleme = Integer.toString(id);
+                        sql1 = sql1.concat(ekleme);
+                        result = statement.executeQuery(sql1);
+                        while (result.next()) {
+                            int islem_no = result.getInt("islem_no");
+                            String islem = result.getString("islem");
+                            int hedef = result.getInt("hedef");
+                            int tutar = result.getInt("tutar");
+                            //int tarih = result.getInt("tarih");
+                            System.out.println("\nİŞLEM NO : " + islem_no);
+                            System.out.println("İŞLEM : " + islem);
+                            System.out.println("HEDEF : " + hedef);
+                            System.out.println("TUTAR : " + tutar);
+                            System.out.println("");
+                        }
+                        statement.close();
+                        break;
+                    } else {
+                        System.out.println("\nBu kullanıcıya erişemezsiniz?!Lütfen tekrar giriniz...");
+                    }
+
+                } else {
+                    System.out.println("\nGirilen  hesap no yanlış.Lütfen tekrar giriniz...");
+                }
+            }
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void talep_onayi() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            int veri_girisi1 = 0;
+            System.out.println("\nHesap açma işlemleri için 1'i,\n\nKredi onay işlemleri için 2'yi tuşlayınız,\n\nHesap silme işlemleri için 3'ü tuşlayınız.\n");
+            veri_girisi1 = sc.nextInt();
+            if (veri_girisi1 == 1) {
+                int secim1 = 0;
+                System.out.println("\nOnay vermek istiyorsanız 1'1, onay vermeyecekseniz 2'yi tuşlayınız");
+                secim1 = sc.nextInt();
+                if (secim1 == 1) {
+                    String sql1 = "UPDATE talepler SET onay_durumu = ? where kullanıcı_id = ? ";
+                    PreparedStatement statement1 = connection.prepareStatement(sql1);
+                    String sql2 = "INSERT INTO hesaplar (kid,hesap_no,kur,bakiye,toplam_borc,aylık_borc,faiz,gecikme_faizi,temsilci_no) VALUES(?,?,?,?,?,?,?,?,?)";
+                    PreparedStatement statement2 = connection.prepareStatement(sql2);
+                    int kid = 0;
+                    while (true) {
+                        System.out.print("Müşteri kullanıcı id'si giriniz : ");
+                        kid = sc.nextInt();
+                        String ekleme = Integer.toString(kid);
+                        sql1 = "SELECT COUNT(kullanıcı_id) FROM talepler WHERE kullanıcı_id = ";
+                        sql1 = sql1.concat(ekleme);
+                        PreparedStatement statement5 = connection.prepareStatement(sql1);
+                        ResultSet result = statement5.executeQuery(sql1);
+                        result.next();
+                        int varmi = result.getInt("COUNT(kullanıcı_id)");
+                        result.close();
+                        sql1 = "SELECT COUNT(kullanıcı_id) FROM bilgi WHERE kullanıcı_id = ";
+                        sql1 = sql1.concat(ekleme);
+                        statement5 = connection.prepareStatement(sql1);
+                        result = statement5.executeQuery(sql1);
+                        result.next();
+                        int varmi1 = result.getInt("COUNT(kullanıcı_id)");
+                        result.close();
+                        if (varmi1 != 1) {
+                            System.out.println("Yanlış kullanıcı id.Lütfen tekrar giriniz...");
+                        } else if (varmi == 0) {
+                            System.out.println("\nGirilen hesap no ya ait hesap açma talebi bulunmaktadır.Lütfen tekrar giriniz...");
+                        } else {
+                            break;
+                        }
+                    }
+                    statement1.setString(1, "ONAY VERİLDİ.");
+                    statement1.setInt(2, kid);
+                    statement1.executeUpdate();
+                    int hesap = 123;
+                    while (true) {
+                        System.out.println("\nLütfen hesap bilgilerini giriniz!");
+                        System.out.print("\nHesap NO : ");
+                        hesap = sc1.nextInt();
+                        String ekleme = Integer.toString(hesap);
+                        sql1 = "SELECT COUNT(hesap_no) FROM hesaplar WHERE hesap_no = ";
+                        sql1 = sql1.concat(ekleme);
+                        PreparedStatement statement5 = connection.prepareStatement(sql1);
+                        ResultSet result = statement5.executeQuery(sql1);
+                        result.next();
+                        int varmi = result.getInt("COUNT(hesap_no)");
+                        result.close();
+                        if (varmi == 0) {
+                            break;
+                        } else {
+                            System.out.println("\nGirilen hesap no ya ait hesap bulunmaktadır.Lütfen tekrar giriniz...");
+                        }
+                    }
+                    String kur = "TL";
+                    while (true) {
+                        System.out.println("\nHangi kurdan hesap açmak istersiniz");
+                        System.out.print("\nKur : ");
+                        kur = br.readLine();
+                        String sql = "SELECT COUNT(kur) FROM kurlar where kur = '";
+                        sql = sql.concat(kur + "'");
+                        PreparedStatement statement3 = connection.prepareStatement(sql);
+                        ResultSet result1 = statement3.executeQuery(sql);
+                        result1.next();
+                        int varmi = result1.getInt("COUNT(kur)");
+                        if (varmi == 1) {
+                            break;
+                        } else {
+                            System.out.println("\nGirilen kur bulunmamaktadır.Lütfen tekrar giriniz...");
+                        }
+                    }
+                    statement2.setInt(1, kid);
+                    statement2.setInt(2, hesap);
+                    statement2.setString(3, kur);
+                    statement2.setInt(4, 0);
+                    statement2.setInt(5, 0);
+                    statement2.setInt(6, 0);
+                    statement2.setFloat(7, 0);
+                    statement2.setFloat(8, 0);
+                    statement2.setInt(9, temsilci_no);
+                    statement2.executeUpdate();
+                    statement1.close();
+                    statement2.close();
+                } else if (secim1 == 2) {
+                    String sql4 = "UPDATE talepler SET onay_durumu = ? where kullanıcı_id = ? ";
+                    PreparedStatement statement4 = connection.prepareStatement(sql4);
+                    int kid = 0;
+                    System.out.println("Müşteri kullanıcı id'si giriniz : ");
+                    kid = sc.nextInt();
+                    statement4.setString(1, "REDDEDİLDİ.");
+                    statement4.setInt(2, kid);
+                    statement4.executeUpdate();
+                    statement4.close();
+                }
+            } else if (veri_girisi1 == 2) {
+                int kid = 0;
+                while (true) {
+                    System.out.print("\nMüşteri kullanıcı id'si giriniz : ");
+                    kid = sc.nextInt();
+                    String ekleme = Integer.toString(kid);
+                    String sql = "SELECT COUNT(kullanıcı_id) FROM bilgi WHERE kullanıcı_id = ";
+                    sql = sql.concat(ekleme);
+                    PreparedStatement statement = connection.prepareStatement(sql);
+                    ResultSet result = statement.executeQuery(sql);
+                    result.next();
+                    int varmi1 = result.getInt("COUNT(kullanıcı_id)");
+                    result.close();
+                    sql = "SELECT COUNT(kullanıcı_id) FROM talepler WHERE kullanıcı_id = ";
+                    sql = sql.concat(ekleme);
+                    statement = connection.prepareStatement(sql);
+                    result = statement.executeQuery(sql);
+                    result.next();
+                    int varmi = result.getInt("COUNT(kullanıcı_id)");
+                    result.close();
+                    if (varmi1 != 1) {
+                        System.out.println("Yanlış kullanıcı id.Lütfen tekrar giriniz...");
+                    } else if (varmi == 0) {
+                        System.out.println("\nGirilen hesap no ya ait hesap açma talebi bulunmaktadır.Lütfen tekrar giriniz...");
+                    } else {
+                        while (true) {
+                            System.out.print("Müşteri hesap no giriniz : ");
+                            int hesap_no = sc.nextInt();
+                            String ekleme1 = Integer.toString(kid);
+                            String sql0 = "SELECT COUNT(kullanıcı_id) FROM talepler WHERE kullanıcı_id = ";
+                            sql0 = sql0.concat(ekleme1);
+                            ekleme1 = Integer.toString(hesap_no);
+                            String sql1 = " and hesap_no = ";
+                            sql1 = sql1.concat(ekleme1);
+                            sql0 = sql0.concat(sql1);
+                            String sql2 = sql0;
+                            statement = connection.prepareStatement(sql0);
+                            result = statement.executeQuery(sql0);
+                            result.next();
+                            varmi = result.getInt("COUNT(kullanıcı_id)");
+                            result.close();
+
+                            sql1 = " and (onay_durumu = 'REDDEDİLDİ.' or onay_durumu = 'ONAY VERİLDİ.')";
+                            sql0 = sql0.concat(sql1);
+                            statement = connection.prepareStatement(sql0);
+                            result = statement.executeQuery(sql0);
+                            result.next();
+                            int varmi2 = result.getInt("COUNT(kullanıcı_id)");
+                            result.close();
+
+                            sql0 = "SELECT COUNT(hesap_no) FROM hesaplar WHERE hesap_no = ";
+                            sql0 = sql0.concat(ekleme1);
+                            statement = connection.prepareStatement(sql0);
+                            result = statement.executeQuery(sql0);
+                            result.next();
+                            varmi1 = result.getInt("COUNT(hesap_no)");
+                            result.close();
+
+                            sql0 = " and talep_türü = 'Kredi Talebi'";
+                            sql2 = sql2.concat(sql0);
+                            statement = connection.prepareStatement(sql2);
+                            result = statement.executeQuery(sql2);
+                            result.next();
+                            int varmi3 = result.getInt("COUNT(kullanıcı_id)");
+                            result.close();
+
+                            if (varmi1 == 0) {
+                                System.out.println("\nGirilen hesap no ya ait hesap yoktur.Lütfen tekrar giriniz...");
+                            } else if (varmi == 0) {
+                                System.out.println("\nGirilen hesap no ya ait talep bulunamamaktadır.Lütfen tekrar giriniz...");
+                            } else if (varmi2 == 1) {
+                                System.out.println("\nBu talep önceden onaylanmış veya reddilmiştir.Lütfen tekrar giriniz...");
+                            } else if (varmi3 == 0) {
+                                System.out.println("\nGirilen hesap no ya ait kredi talebi bulunmamaktadır.Lütfen tekrar giriniz...");
+                            } else {
+                                sql = "SELECT * FROM hesaplar WHERE hesap_no = ";
+                                ekleme = Integer.toString(hesap_no);
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                result = statement.executeQuery(sql);
+                                result.next();
+                                int bakiye = result.getInt("bakiye");
+                                int borc = result.getInt("toplam_borc");
+                                System.out.println("\nHesap NO : " + hesap_no);
+                                System.out.println("Toplam Bakiye : " + bakiye);
+                                System.out.println("Toplam Borç : " + borc);
+                                sql = "SELECT * FROM talepler WHERE hesap_no = ";
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                result = statement.executeQuery(sql);
+                                result.next();
+                                int miktar = result.getInt("miktar");
+                                int vade = result.getInt("vade");
+                                System.out.println("\nTalep edilen Miktar : " + miktar);
+                                System.out.println("Talep edilen Vade : " + vade);
+                                System.out.print("\nOnaylamak isterseniz 1 e Reddedmek isterseniz 0 a basınız : ");
+                                veri_girisi = sc.nextInt();
+                                if (veri_girisi == 1) {
+                                    sql = "UPDATE talepler SET onay_durumu = ? where hesap_no = ? ";
+                                    statement = connection.prepareStatement(sql);
+                                    statement.setString(1, "ONAY VERİLDİ.");
+                                    statement.setInt(2, hesap_no);
+                                    statement.executeUpdate();
+                                    statement.close();
+                                } else {
+                                    sql = "UPDATE talepler SET onay_durumu = ? where hesap_no = ? ";
+                                    statement = connection.prepareStatement(sql);
+                                    statement.setString(1, "REDDEDİLDİ.");
+                                    statement.setInt(2, hesap_no);
+                                    statement.executeUpdate();
+                                    statement.close();
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            } else if (veri_girisi1 == 3) {
+                int kid = 0;
+                while (true) {
+                    System.out.print("\nMüşteri kullanıcı id'si giriniz : ");
+                    kid = sc.nextInt();
+                    String ekleme = Integer.toString(kid);
+                    String sql = "SELECT COUNT(kullanıcı_id) FROM bilgi WHERE kullanıcı_id = ";
+                    sql = sql.concat(ekleme);
+                    PreparedStatement statement = connection.prepareStatement(sql);
+                    ResultSet result = statement.executeQuery(sql);
+                    result.next();
+                    int varmi1 = result.getInt("COUNT(kullanıcı_id)");
+                    result.close();
+                    sql = "SELECT COUNT(kullanıcı_id) FROM talepler WHERE kullanıcı_id = ";
+                    sql = sql.concat(ekleme);
+                    statement = connection.prepareStatement(sql);
+                    result = statement.executeQuery(sql);
+                    result.next();
+                    int varmi = result.getInt("COUNT(kullanıcı_id)");
+                    result.close();
+                    if (varmi1 != 1) {
+                        System.out.println("\nYanlış kullanıcı id.Lütfen tekrar giriniz...");
+                    } else if (varmi == 0) {
+                        System.out.println("\nGirilen hesap no ya ait hesap açma talebi bulunmaktadır.Lütfen tekrar giriniz...");
+                    } else {
+                        while (true) {
+                            System.out.print("\nMüşteri hesap no giriniz : ");
+                            int hesap_no = sc.nextInt();
+                            String ekleme1 = Integer.toString(kid);
+                            String sql0 = "SELECT COUNT(kullanıcı_id) FROM talepler WHERE kullanıcı_id = ";
+                            sql0 = sql0.concat(ekleme1);
+                            ekleme1 = Integer.toString(hesap_no);
+                            String sql1 = " and hesap_no = ";
+                            sql1 = sql1.concat(ekleme1);
+                            sql0 = sql0.concat(sql1);
+                            String sql2 = sql0;
+                            statement = connection.prepareStatement(sql0);
+                            result = statement.executeQuery(sql0);
+                            result.next();
+                            varmi = result.getInt("COUNT(kullanıcı_id)");
+                            result.close();
+
+                            sql1 = " and (onay_durumu = 'REDDEDİLDİ.' or onay_durumu = 'ONAY VERİLDİ.')";
+                            sql0 = sql0.concat(sql1);
+                            statement = connection.prepareStatement(sql0);
+                            result = statement.executeQuery(sql0);
+                            result.next();
+                            int varmi2 = result.getInt("COUNT(kullanıcı_id)");
+                            result.close();
+
+                            sql0 = "SELECT COUNT(hesap_no) FROM hesaplar WHERE hesap_no = ";
+                            sql0 = sql0.concat(ekleme1);
+                            statement = connection.prepareStatement(sql0);
+                            result = statement.executeQuery(sql0);
+                            result.next();
+                            varmi1 = result.getInt("COUNT(hesap_no)");
+                            result.close();
+
+                            sql0 = " and talep_türü = 'Hesap Silme'";
+                            sql2 = sql2.concat(sql0);
+                            statement = connection.prepareStatement(sql2);
+                            result = statement.executeQuery(sql2);
+                            result.next();
+                            int varmi3 = result.getInt("COUNT(kullanıcı_id)");
+                            result.close();
+
+                            if (varmi1 == 0) {
+                                System.out.println("\nGirilen hesap no ya ait hesap yoktur.Lütfen tekrar giriniz...");
+                            } else if (varmi == 0) {
+                                System.out.println("\nGirilen hesap no ya ait talep bulunamamaktadır.Lütfen tekrar giriniz...");
+                            } else if (varmi2 == 1) {
+                                System.out.println("\nBu talep önceden onaylanmış veya reddilmiştir.Lütfen tekrar giriniz...");
+                            } else if (varmi3 == 0) {
+                                System.out.println("\nGirilen hesap no ya ait Hesap Silme talebi bulunmamaktadır.Lütfen tekrar giriniz...");
+                            } else {
+                                sql = "SELECT * FROM hesaplar WHERE hesap_no = ";
+                                ekleme = Integer.toString(hesap_no);
+                                sql = sql.concat(ekleme);
+                                statement = connection.prepareStatement(sql);
+                                result = statement.executeQuery(sql);
+                                result.next();
+                                int bakiye = result.getInt("bakiye");
+                                int borc = result.getInt("toplam_borc");
+                                System.out.println("\nHesap NO : " + hesap_no);
+                                System.out.println("Toplam Bakiye : " + bakiye);
+                                System.out.println("Toplam Borç : " + borc);
+                                System.out.print("\nOnaylamak isterseniz 1 e Reddedmek isterseniz 0 a basınız : ");
+                                veri_girisi = sc.nextInt();
+                                if (bakiye == 0 && borc == 0 && veri_girisi == 1) {
+                                    String sql3 = "DELETE FROM hesaplar where hesap_no = ";
+                                    ekleme = Integer.toString(hesap_no);
+                                    sql3 = sql3.concat(ekleme);
+                                    PreparedStatement statement2 = connection.prepareStatement(sql3);
+                                    statement2.executeUpdate();
+                                    statement2.close();
+                                    sql = "UPDATE talepler SET onay_durumu = ? where hesap_no = ? ";
+                                    statement = connection.prepareStatement(sql);
+                                    statement.setString(1, "ONAY VERİLDİ.");
+                                    statement.setInt(2, hesap_no);
+                                    statement.executeUpdate();
+                                    statement.close();
+                                    System.out.println(ekleme + " Hesap numaralı hesabınız silinmiştir...");
+                                } else if (bakiye == 0 && borc == 0 && veri_girisi == 0) {
+                                    String sql3 = "DELETE FROM hesaplar where hesap_no = ";
+                                    ekleme = Integer.toString(hesap_no);
+                                    sql3 = sql3.concat(ekleme);
+                                    PreparedStatement statement2 = connection.prepareStatement(sql3);
+                                    statement2.executeUpdate();
+                                    statement2.close();
+                                    sql = "UPDATE talepler SET onay_durumu = ? where hesap_no = ? ";
+                                    statement = connection.prepareStatement(sql);
+                                    statement.setString(1, "REDDEDİLDİ.");
+                                    statement.setInt(2, hesap_no);
+                                    statement.executeUpdate();
+                                    statement.close();
+                                    System.out.println(ekleme + "Hesap numaralı hesabınız silinmiştir...");
+                                } else if (bakiye == 0 && veri_girisi == 0) {
+                                    sql = "UPDATE talepler SET onay_durumu = ? where hesap_no = ? ";
+                                    statement = connection.prepareStatement(sql);
+                                    statement.setString(1, "REDDEDİLDİ.");
+                                    statement.setInt(2, hesap_no);
+                                    statement.executeUpdate();
+                                    statement.close();
+                                    System.out.println("\nNereye kaçıyorsunuz? Bankaya borçlusunuz amk!!");
+                                    System.out.println("Toplam Borcunuz : " + borc);
+                                } else if (borc == 0 && veri_girisi == 0) {
+                                    sql = "UPDATE talepler SET onay_durumu = ? where hesap_no = ? ";
+                                    statement = connection.prepareStatement(sql);
+                                    statement.setString(1, "REDDEDİLDİ.");
+                                    statement.setInt(2, hesap_no);
+                                    statement.executeUpdate();
+                                    statement.close();
+                                    System.out.println("\nHeyyyyy.Paraları almadan nereye!! Bize uyar gerçi :D");
+                                    System.out.println("\nToplam Bakiyeniz : " + bakiye);
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+}
+
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package net.codejava;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Scanner;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.sql.Date;
+
+/**
+ *
+ * @author melih
+ */
+public class yonetici {
+
+    String url = "jdbc:mysql://localhost:3306/banka";
+    String username = "root";
+    String password = "Mysql_sifresi123";
+    Scanner sc = new Scanner(System.in);
+    Scanner sc1 = new Scanner(System.in);
+    InputStreamReader ir = new InputStreamReader(System.in);
+    BufferedReader br = new BufferedReader(ir);
+    int veri_girisi = 0;
+    int kullanıcı_id;
+    int temsilci_maas;
+
+    yonetici() {
+    }
+
+    void kur_güncelle() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            String sql = "INSERT INTO kurlar (kur, karsılıgı) VALUES(?,?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            System.out.print("\nKur eklemek istiyorsanız 1'e basın yoksa 0'a basın : ");
+            veri_girisi = sc.nextInt();
+            if (veri_girisi != 0) {
+                System.out.println("Para birimi giriniz : ");
+                String birim = br.readLine();
+                System.out.println("Güncel değerini giriniz : ");
+                float deger = sc1.nextFloat();
+                statement.setString(1, birim);
+                statement.setFloat(2, deger);
+                statement.executeUpdate();
+            }
+            System.out.print("\nKur güncellemek istiyorsanız 1'e basın yoksa 0'a basın : ");
+            veri_girisi = sc.nextInt();
+            if (veri_girisi != 0) {
+                String sql1 = "UPDATE kurlar SET karsılıgı = ? where kur= ?";
+                PreparedStatement statement1 = connection.prepareStatement(sql1);
+                System.out.println("Güncellemek istediğiniz Kur'u giriniz : ");
+                String birim = br.readLine();
+                System.out.println("Güncel değeri giriniz : ");
+                float karsılıgı = sc1.nextFloat();
+                statement1.setFloat(1, karsılıgı);
+                statement1.setString(2, birim);
+                statement1.executeUpdate();
+                statement1.close();
+            }
+            statement.close();
+            connection.close();
+
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+
+    }
+
+    void genel_durum_görüntüle() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            while (true) {
+                String sql = "SELECT SUM(aylık_borc) FROM hesaplar";
+                PreparedStatement statement = connection.prepareStatement(sql);
+                String sql1 = "SELECT SUM(toplam_borc) FROM hesaplar";
+                PreparedStatement statement1 = connection.prepareStatement(sql1);
+                String sql2 = "SELECT SUM(aylık_borc) - SUM(toplam_borc) FROM hesaplar";
+                PreparedStatement statement2 = connection.prepareStatement(sql2);
+                String sql3 = "SELECT SUM(bakiye) FROM hesaplar";
+                PreparedStatement statement3 = connection.prepareStatement(sql3);
+                ResultSet result = statement.executeQuery(sql);
+                int gelir = 0;
+                System.out.println(" \n---BANKA GENEL DURUMU---\n ");
+                while (result.next()) {
+                    gelir = result.getInt("SUM(aylık_borc)");
+                    System.out.println("Gelir Durumu : " + gelir);
+                    break;
+                }
+                ResultSet result1 = statement1.executeQuery(sql1);
+                int gider = 0;
+                while (result1.next()) {
+                    gider = result1.getInt("SUM(toplam_borc)");
+                    System.out.println("Gider Durumu : " + gider);
+                    break;
+                }
+                ResultSet result2 = statement2.executeQuery(sql2);
+                int kar = 0;
+                while (result2.next()) {
+                    kar = result2.getInt("SUM(aylık_borc) - SUM(toplam_borc)");
+                    System.out.println("Kar Durumu : " + kar);
+                    break;
+                }
+                ResultSet result3 = statement3.executeQuery(sql3);
+                float toplam_bakiye = 0;
+                while (result3.next()) {
+                    toplam_bakiye = result3.getInt("SUM(bakiye)");
+                    System.out.println("Banka Toplam Bakiyesi : " + toplam_bakiye);
+                    break;
+                }
+                statement.close();
+                break;
+            }
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void maas_belirle() {
+        System.out.print("\nMaaş giriniz : ");
+        temsilci_maas = sc.nextInt();
+    }
+
+    void islem_goruntule() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            System.out.print("\nSondan görüntülemek istediğiniz işlem sayısını giriniz : ");
+            veri_girisi = sc.nextInt();
+            String sql = "SELECT * FROM özetler WHERE islem_no > (SELECT MAX(islem_no) - ";
+            String sql1 = " FROM özetler)";
+            String ekleme = Integer.toString(veri_girisi);
+            sql = sql.concat(ekleme);
+            sql = sql.concat(sql1);
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet result = statement.executeQuery(sql);
+            while (result.next()) {
+                int islem_no = result.getInt("islem_no");
+                String islem = result.getString("islem");
+                int kaynak = result.getInt("kaynak");
+                int hedef = result.getInt("hedef");
+                int tutar = result.getInt("tutar");
+                int kaynak_bakiye = result.getInt("kaynak_bakiye");
+                int hedef_bakiye = result.getInt("hedef_bakiye");
+                Date tarih = result.getDate("tarih");
+                System.out.println("\nİŞLEM NO : " + islem_no);
+                System.out.println("İŞLEM : " + islem);
+                System.out.println("KAYNAK : " + kaynak);
+                System.out.println("HEDEF : " + hedef);
+                System.out.println("KAYNAK BAKİYE : " + kaynak_bakiye);
+                System.out.println("HEDEF BAKİYE : " + hedef_bakiye);
+                System.out.println("TUTAR : " + tutar);
+                System.out.println("TARİH : " + tarih);
+                System.out.println("");
+            }
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+
+    }
+
+    void faiz_belirle() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            int kid = 0;
+            while (true) {
+                System.out.print("Müşteri hesap no giriniz : ");
+                int hesap_no = sc.nextInt();
+                String sql0 = "SELECT COUNT(kullanıcı_id) FROM talepler where hesap_no = ";
+                String ekleme = Integer.toString(hesap_no);
+                sql0 = sql0.concat(ekleme);
+                String sql2 = sql0;
+                PreparedStatement statement = connection.prepareStatement(sql0);
+                ResultSet result = statement.executeQuery(sql0);
+                result.next();
+                int varmi = result.getInt("COUNT(kullanıcı_id)");
+                result.close();
+
+                String sql1 = " and onay_durumu = 'ONAY VERİLDİ.'";
+                sql0 = sql0.concat(sql1);
+                statement = connection.prepareStatement(sql0);
+                result = statement.executeQuery(sql0);
+                result.next();
+                int varmi2 = result.getInt("COUNT(kullanıcı_id)");
+                result.close();
+
+                sql0 = "SELECT COUNT(hesap_no) FROM hesaplar WHERE hesap_no = ";
+                sql0 = sql0.concat(ekleme);
+                statement = connection.prepareStatement(sql0);
+                result = statement.executeQuery(sql0);
+                result.next();
+                int varmi1 = result.getInt("COUNT(hesap_no)");
+                result.close();
+
+                sql0 = " and talep_türü = 'Kredi Talebi'";
+                sql2 = sql2.concat(sql0);
+                statement = connection.prepareStatement(sql2);
+                result = statement.executeQuery(sql2);
+                result.next();
+                int varmi3 = result.getInt("COUNT(kullanıcı_id)");
+                result.close();
+
+                if (varmi1 == 0) {
+                    System.out.println("\nGirilen hesap no ya ait hesap yoktur.Lütfen tekrar giriniz...");
+                } else if (varmi == 0) {
+                    System.out.println("\nGirilen hesap no ya ait talep bulunamamaktadır.Lütfen tekrar giriniz...");
+                } else if (varmi2 != 1) {
+                    System.out.println("\nBu talep önceden onaylanmamış veya reddilmiştir.Lütfen tekrar giriniz...");
+                } else if (varmi3 == 0) {
+                    System.out.println("\nGirilen hesap no ya ait kredi talebi bulunmamaktadır.Lütfen tekrar giriniz...");
+                } else {
+                    String sql = "SELECT * FROM hesaplar WHERE hesap_no = ";
+                    sql = sql.concat(ekleme);
+                    statement = connection.prepareStatement(sql);
+                    result = statement.executeQuery(sql);
+                    result.next();
+                    int bakiye = result.getInt("bakiye");
+                    int borc = result.getInt("toplam_borc");
+                    System.out.println("\nHesap NO : " + hesap_no);
+                    System.out.println("Toplam Bakiye : " + bakiye);
+                    System.out.println("Toplam Borç : " + borc);
+                    sql = "SELECT * FROM talepler WHERE hesap_no = ";
+                    sql = sql.concat(ekleme);
+                    statement = connection.prepareStatement(sql);
+                    result = statement.executeQuery(sql);
+                    result.next();
+                    int miktar = result.getInt("miktar");
+                    int vade = result.getInt("vade");
+                    System.out.println("\nTalep edilen Miktar : " + miktar);
+                    System.out.println("Talep edilen Vade : " + vade);
+                    System.out.print("\nFaiz : ");
+                    float faiz = sc1.nextFloat();
+                    System.out.print("Gecikme Faiz : ");
+                    float gecikme_faizi = sc1.nextFloat();
+                    sql1 = "UPDATE hesaplar SET faiz = ?,gecikme_faizi = ?,bakiye = ?,toplam_borc = ?,aylık_borc = ? where hesap_no = ?";
+                    PreparedStatement statement1 = connection.prepareStatement(sql1);
+                    statement1.setFloat(1, faiz);
+                    statement1.setFloat(2, gecikme_faizi);
+                    statement1.setInt(3, bakiye + miktar);
+                    statement1.setInt(4, borc + miktar + (int) (miktar * faiz));
+                    statement1.setInt(5, (miktar + (int) (miktar * faiz)) / vade);
+                    statement1.setInt(6, hesap_no);
+                    statement1.executeUpdate();
+                    sql = "DELETE FROM talepler where hesap_no = ";
+                    sql = sql.concat(ekleme);
+                    statement1 = connection.prepareStatement(sql);
+                    statement1.executeUpdate();
+                    statement1.close();
+                    break;
+                }
+            }
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void musteri_ekle() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            String sql = "INSERT INTO bilgi (ad_soyad,tel_no,tc_no,adres,e_posta,pozisyon,kullanıcı_id) VALUES(?,?,?,?,?,?,?)";
+            String sql1 = "INSERT INTO hesaplar (kid,hesap_no,kur,bakiye,toplam_borc,aylık_borc,faiz,gecikme_faizi,temsilci_no) VALUES(?,?,?,?,?,?,?,?,?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement2 = connection.prepareStatement(sql1);
+            System.out.print("\nİsim Soyisim : ");
+            String isim = br.readLine();
+            System.out.print("\nTel NO : ");
+            int tel = sc1.nextInt();
+            System.out.print("\nTC NO : ");
+            int tc = sc1.nextInt();
+            System.out.print("\nAdres: ");
+            String adres = br.readLine();
+            System.out.print("\nE-Posta : ");
+            String mail = br.readLine();
+            System.out.print("\nPozisyon : ");
+            String poz = br.readLine();
+            System.out.print("\nKullanıcı ID : ");
+            int id = sc1.nextInt();
+            System.out.println("\nLütfen hesap bilgilerini giriniz!");
+            System.out.print("\nHesap NO : ");
+            int hesap = sc1.nextInt();
+            int temsilci_no = 0;
+            while (true) {
+                System.out.println("\nLütfen temsilci atayınız!");
+                System.out.print("\nTemsilci NO : ");
+                temsilci_no = sc1.nextInt();
+                sql = "SELECT COUNT(temsilci_no) FROM bilgi where temsilci_no = ";
+                String ekleme = Integer.toString(temsilci_no);
+                sql = sql.concat(ekleme);
+                PreparedStatement statement3 = connection.prepareStatement(sql);
+                ResultSet result1 = statement3.executeQuery(sql);
+                result1.next();
+                int varmi = result1.getInt("COUNT(temsilci_no)");
+                if (varmi == 1) {
+                    break;
+                } else {
+                    System.out.println("\nBu temsilci no ya ait temsilci bulunamamıştır.Lütfen tekrar giriniz...");
+                }
+            }
+            statement.setString(1, isim);
+            statement.setInt(2, tel);
+            statement.setInt(3, tc);
+            statement.setString(4, adres);
+            statement.setString(5, mail);
+            statement.setString(6, poz);
+            statement.setInt(7, id);
+            statement2.setInt(1, id);
+            statement2.setInt(2, hesap);
+            statement2.setString(3, "TL");
+            statement2.setInt(4, 0);
+            statement2.setInt(5, 0);
+            statement2.setInt(6, 0);
+            statement2.setFloat(7, 0);
+            statement2.setFloat(8, 0);
+            statement2.setInt(9, temsilci_no);
+            statement.executeUpdate();
+            statement2.executeUpdate();
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+    void yasama_yürütme() {
+        try {
+            Connection connection = DriverManager.getConnection(url, username, password);
+            String sql = "SELECT * FROM hesaplar WHERE kur = 'TL'";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet result = statement.executeQuery(sql);
+            while (result.next()) {
+                int hesap_no = result.getInt("hesap_no");
+                int temsilci_no = result.getInt("temsilci_no");
+                int aylık_borc = result.getInt("aylık_borc");
+                int toplam_borc = result.getInt("toplam_borc");
+                String kur = result.getString("kur");
+                int para = result.getInt("bakiye");
+                float gecikme_faizi = result.getFloat("gecikme_faizi");
+                int gecikme_borcu = result.getInt("gecikme_borcu");
+                if (toplam_borc == 0) {
+                } else if (para >= aylık_borc + gecikme_borcu) {
+                    String str = "2015-03-31";
+                    Date date = Date.valueOf(str);
+                    sql = "UPDATE hesaplar SET bakiye = ?,toplam_borc = ?,aylık_borc = ?,gecikme_borcu = ? where hesap_no = ";
+                    String ekleme = Integer.toString(hesap_no);
+                    sql = sql.concat(ekleme);
+                    statement = connection.prepareStatement(sql);
+                    statement.setInt(1, para - aylık_borc - gecikme_borcu);
+                    statement.setInt(2, toplam_borc - aylık_borc - gecikme_borcu);
+                    if (toplam_borc - aylık_borc == 0) {
+                        statement.setInt(3, 0);
+                    } else {
+                        statement.setInt(3, aylık_borc);
+                    }
+                    statement.setInt(4, 0);
+                    statement.executeUpdate();
+                    statement.close();
+                    sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,kaynak_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                    statement = connection.prepareStatement(sql);
+                    statement.setInt(1, hesap_no);
+                    statement.setInt(2, 99999);
+                    statement.setString(3, "Borç Ödeme");
+                    statement.setInt(4, aylık_borc + gecikme_borcu);
+                    statement.setInt(5, para);
+                    statement.setDate(6, date);
+                    statement.setInt(7, temsilci_no);
+                    statement.executeUpdate();
+                } else {
+                    String str = "2015-03-31";
+                    Date date = Date.valueOf(str);
+                    sql = "UPDATE hesaplar SET bakiye = ?,toplam_borc = ?,aylık_borc = ?,gecikme_borcu = ? where hesap_no = ";
+                    String ekleme = Integer.toString(hesap_no);
+                    sql = sql.concat(ekleme);
+                    statement = connection.prepareStatement(sql);
+                    if (para == 0) {
+                        statement.setInt(1, 0);
+                        statement.setInt(2, toplam_borc - aylık_borc + aylık_borc + (int) ((aylık_borc) * gecikme_faizi));
+                        statement.setInt(3, aylık_borc);
+                        statement.setInt(4, gecikme_borcu + (int) ((aylık_borc) * gecikme_faizi));
+                        statement.executeUpdate();
+                        statement.close();
+                    } else {
+                        statement.setInt(1, 0);
+                        statement.setInt(2, toplam_borc - aylık_borc + aylık_borc + (int) ((aylık_borc - para) * gecikme_faizi) - para);
+                        if (toplam_borc - aylık_borc == 0) {
+                            statement.setInt(3, aylık_borc - para);
+                        } else {
+                            statement.setInt(3, aylık_borc);
+                        }
+                        statement.setInt(4, gecikme_borcu + (int) ((aylık_borc - para) * gecikme_faizi));
+                        statement.executeUpdate();
+                        statement.close();
+                        sql = "INSERT INTO özetler (kaynak,hedef,islem,tutar,kaynak_bakiye,tarih,temsilci_no) VALUES(?,?,?,?,?,?,?)";
+                        statement = connection.prepareStatement(sql);
+                        statement.setInt(1, hesap_no);
+                        statement.setInt(2, 99999);
+                        statement.setString(3, "Borç Ödeme");
+                        statement.setInt(4, para);
+                        statement.setInt(5, para);
+                        statement.setDate(6, date);
+                        statement.setInt(7, temsilci_no);
+                        statement.executeUpdate();
+                    }
+                }
+            }
+            System.out.println("");
+            statement.close();
+            connection.close();
+        } catch (Exception e) {
+            System.out.println("\nOops, error");
+            e.printStackTrace();
+        }
+    }
+
+}
+
